@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,7 +32,7 @@ namespace Payment.Api
         {
             services.AddDbContext<PaymentDbContext>(option => option.UseInMemoryDatabase(Configuration.GetConnectionString("PaymentDb")));
             services.AddMediatR(typeof(Startup));
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Payment API", Version = "v1" });

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Payment.Api.Data.Commands;
 using Payment.Api.Data.Queries;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,13 @@ namespace Payment.Api.Controllers
         {
             var query = new GetPaymentByIdQuery() { Id = id };
             return Ok(await _mediator.Send(query));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] CreatePaymentCommand requestModel)
+        {
+            var response = await _mediator.Send(requestModel);
+            return Ok(response);
         }
 
     }
