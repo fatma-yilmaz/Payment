@@ -15,9 +15,5 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Validators\" />
-  </ItemGroup>
-
 
 </Project>

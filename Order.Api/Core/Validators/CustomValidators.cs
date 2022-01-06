@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Payment.Api.Core.Validators
+namespace Order.Api.Core.Validators
 {
     public static class CustomValidators
     {
