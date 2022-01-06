@@ -20,7 +20,8 @@ namespace Payment.Api.Data.Queries
         public async Task<GetPaymentByIdQueryResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
         {
             var payment = await _dbContext.Payments.SingleOrDefaultAsync(p => p.Id == request.Id);
-            return new GetPaymentByIdQueryResponse
+
+            return payment ==null ? null : new GetPaymentByIdQueryResponse
             {
                 Id = payment.Id,
                 CreationDate = payment.CreationDate,

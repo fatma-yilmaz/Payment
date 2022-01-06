@@ -11,7 +11,6 @@ namespace Payment.Api.Data.Commands
     {
         public decimal Amount { get; set; }
         public string CurrencyCode { get; set; }
-        public string Status { get; set; }
     }
 
     public class CreatePaymentCommandValidator : AbstractValidator<CreatePaymentCommand>
@@ -26,10 +25,6 @@ namespace Payment.Api.Data.Commands
                 .NotEmpty().WithMessage($"{nameof(CreatePaymentCommand.CurrencyCode)}_should_not_be_empty")
                 .NotNull().WithMessage($"{nameof(CreatePaymentCommand.CurrencyCode)}_should_not_be_null")
                 .Length(3).WithMessage($"{nameof(CreatePaymentCommand.CurrencyCode)}_length_should_be_3");
-
-            RuleFor(a => a.Status)
-                .NotEmpty().WithMessage($"{nameof(CreatePaymentCommand.Status)}_should_not_be_empty")
-                .NotNull().WithMessage($"{nameof(CreatePaymentCommand.Status)}_should_not_be_null");
         }
     }
 }

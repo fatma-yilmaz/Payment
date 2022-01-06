@@ -25,7 +25,10 @@ namespace Payment.Api.Controllers
         public async Task<IActionResult> Get(Guid id)
         {
             var query = new GetPaymentByIdQuery() { Id = id };
-            return Ok(await _mediator.Send(query));
+            var response = (await _mediator.Send(query));
+            if (response == null) return NotFound();
+
+            return Ok(response);
         }
 
         [HttpPost]
