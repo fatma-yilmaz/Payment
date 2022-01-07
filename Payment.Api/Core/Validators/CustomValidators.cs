@@ -7,7 +7,7 @@ namespace Payment.Api.Core.Validators
 {
     public static class CustomValidators
     {
-        public static bool BeAValidGuid(Guid unValidatedGuid)
+        public static bool IsValidGuid(Guid unValidatedGuid)
         {
             if (unValidatedGuid == Guid.Empty || unValidatedGuid == null)
             {

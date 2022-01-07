@@ -45,6 +45,7 @@ namespace Payment.Api
                 client.Timeout = TimeSpan.FromSeconds(1000);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

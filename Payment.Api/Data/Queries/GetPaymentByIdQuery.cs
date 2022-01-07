@@ -20,7 +20,7 @@ namespace Payment.Api.Data.Queries
             RuleFor(a => a.Id)
                 .NotEmpty().WithMessage($"{nameof(GetPaymentByIdQuery.Id)}_should_not_be_empty")
                 .NotNull().WithMessage($"{nameof(GetPaymentByIdQuery.Id)}_should_not_be_null")
-                .Must(CustomValidators.BeAValidGuid).WithMessage($"{nameof(GetPaymentByIdQuery.Id)}_should_be_in_guid_format");
+                .Must(CustomValidators.IsValidGuid).WithMessage($"{nameof(GetPaymentByIdQuery.Id)}_should_be_in_guid_format");
         }
     }
 }

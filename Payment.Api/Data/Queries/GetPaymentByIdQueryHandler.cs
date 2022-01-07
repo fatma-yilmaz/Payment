@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Payment.Api.Core.Validators;
 using Payment.Api.Data.HttpClients;
@@ -17,39 +18,32 @@ namespace Payment.Api.Data.Queries
         private readonly PaymentDbContext _dbContext;
         private readonly OrderHttpClient _orderHttpClient;
         private readonly IMediator _mediator;
-        public GetPaymentByIdQueryHandler(PaymentDbContext dbContext, OrderHttpClient orderHttpClient, IMediator mediator)
+        private readonly IMapper _mapper;
+        public GetPaymentByIdQueryHandler(PaymentDbContext dbContext, OrderHttpClient orderHttpClient, IMediator mediator, IMapper mapper)
         {
             _dbContext = dbContext;
             _orderHttpClient = orderHttpClient;
             _mediator = mediator;
+            _mapper = mapper;
         }
         public async Task<GetPaymentByIdQueryResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
         {
-            var response = new GetPaymentByIdQueryResponse { };
-
             //get payment details
             var payment = await _dbContext.Payments.SingleOrDefaultAsync(p => p.Id == request.Id);
             if (payment == null) return null;
 
             //get order details
-            var order = new Order { };
-            if(CustomValidators.BeAValidGuid(payment.OrderId))
+            var order = new OrderDto { };
+            if(CustomValidators.IsValidGuid(payment.OrderId))
             {
                 var getOrderResponse = await _orderHttpClient.GetOrder(payment.OrderId, cancellationToken);
-                order.Id = getOrderResponse.id;
-                order.ConsumerFullName = getOrderResponse.consumerFullName;
-                order.ConsumerAddress = getOrderResponse.consumerAddress;
+                order = _mapper.Map<OrderDto>(getOrderResponse);
             }
-            
-            return new GetPaymentByIdQueryResponse
-            {
-                Id = payment.Id,
-                CreationDate = payment.CreationDate,
-                Amount = payment.Amount,
-                CurrencyCode = payment.CurrencyCode,
-                Status =payment.Status ,
-                Order = order
-            };
+
+            var response = _mapper.Map<GetPaymentByIdQueryResponse>(payment);
+            response.Order = order;
+
+            return response;
         }
     }
 }

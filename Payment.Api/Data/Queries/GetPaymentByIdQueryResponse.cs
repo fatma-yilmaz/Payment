@@ -12,10 +12,10 @@ namespace Payment.Api.Data.Queries
         public decimal Amount { get; set; }
         public string CurrencyCode { get; set; }
         public string Status { get; set; }
-        public Order Order { get; set; }
+        public OrderDto Order { get; set; }
     }
 
-    public class Order
+    public class OrderDto
     {
         public Guid Id { get; set; }
         public string ConsumerFullName { get; set; }

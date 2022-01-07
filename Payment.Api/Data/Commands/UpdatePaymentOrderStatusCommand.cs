@@ -21,12 +21,12 @@ namespace Payment.Api.Data.Commands
             RuleFor(a => a.PaymentId)
                 .NotEmpty().WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.PaymentId)}_should_not_be_empty")
                 .NotNull().WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.PaymentId)}_should_not_be_null")
-                .Must(CustomValidators.BeAValidGuid).WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.PaymentId)}_should_be_in_guid_format");
+                .Must(CustomValidators.IsValidGuid).WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.PaymentId)}_should_be_in_guid_format");
             
             RuleFor(a => a.OrderId)
                 .NotEmpty().WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.OrderId)}_should_not_be_empty")
                 .NotNull().WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.OrderId)}_should_not_be_null")
-                .Must(CustomValidators.BeAValidGuid).WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.OrderId)}_should_be_in_guid_format");
+                .Must(CustomValidators.IsValidGuid).WithMessage($"{nameof(UpdatePaymentOrderStatusCommand.OrderId)}_should_be_in_guid_format");
         }
     }
 }
