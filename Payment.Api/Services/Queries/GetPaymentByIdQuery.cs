@@ -11,6 +11,10 @@ namespace Payment.Api.Data.Queries
     public class GetPaymentByIdQuery :IRequest<GetPaymentByIdQueryResponse>
     {
         public Guid Id { get; set; }
+        public GetPaymentByIdQuery(Guid id)
+        {
+            Id = id;
+        }
     }
 
     public class GetPaymentByIdQueryValidator : AbstractValidator<GetPaymentByIdQuery>

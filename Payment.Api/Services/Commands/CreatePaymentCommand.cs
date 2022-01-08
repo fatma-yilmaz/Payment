@@ -12,6 +12,16 @@ namespace Payment.Api.Data.Commands
         public decimal Amount { get; set; }
         public string CurrencyCode { get; set; }
         public Order Order { get; set; }
+        public CreatePaymentCommand(decimal amount, string currencyCode, Order order)
+        {
+            Amount = amount;
+            CurrencyCode = currencyCode;
+            Order = order;              
+        }
+        public CreatePaymentCommand()
+        {
+                
+        }
     }
 
     public class Order

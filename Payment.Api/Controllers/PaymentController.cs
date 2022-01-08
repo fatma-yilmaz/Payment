@@ -24,7 +24,7 @@ namespace Payment.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var query = new GetPaymentByIdQuery() { Id = id };
+            var query = new GetPaymentByIdQuery(id);
             var response = (await _mediator.Send(query));
             if (response == null) return NotFound();
 

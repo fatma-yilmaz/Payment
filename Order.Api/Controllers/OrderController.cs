@@ -23,7 +23,7 @@ namespace Order.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var query = new GetOrderByIdQuery() { Id = id };
+            var query = new GetOrderByIdQuery(id);
             var response = (await _mediator.Send(query));
             if (response == null) return NotFound();
 

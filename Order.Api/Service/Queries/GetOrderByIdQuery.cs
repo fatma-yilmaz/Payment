@@ -11,6 +11,10 @@ namespace Order.Api.Data.Queries
     public class GetOrderByIdQuery :IRequest<GetOrderByIdQueryResponse>
     {
         public Guid Id { get; set; }
+        public GetOrderByIdQuery(Guid id)
+        {
+            Id = id;
+        }
     }
 
     public class GetOrderByIdQueryValidator : AbstractValidator<GetOrderByIdQuery>

@@ -34,18 +34,17 @@ namespace Payment.Api.Data.Commands
 
             //create order
             var orderResponse = await _orderHttpClient.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken);
-            
-            if(!orderResponse.isSuccess)
+
+            if (!orderResponse.isSuccess)
             {
                 //update payment status to Failed and return
-                var updatePaymentStatusResponse = await _mediator.Send(new UpdatePaymentStatusCommand() { PaymentId = id, Status = "Failed" });
-
-                return new CreatePaymentCommandResponse{IsSuccess = false};
+                var updatePaymentStatusResponse = await _mediator.Send(new UpdatePaymentStatusCommand(paymentId: id, status: "Failed"),cancellationToken);
+                return new CreatePaymentCommandResponse { IsSuccess = false };
             }
 
             //update orderId of payment and set payment status to Completed
-            var updatePaymentResponse = await _mediator.Send(new UpdatePaymentOrderStatusCommand() { PaymentId = id, OrderId = orderResponse.orderId });
-            
+            var updatePaymentResponse = await _mediator.Send(new UpdatePaymentOrderStatusCommand(paymentId: id, orderId: orderResponse.orderId),cancellationToken);
+
             return new CreatePaymentCommandResponse
             {
                 IsSuccess = updatePaymentResponse.IsSuccess,

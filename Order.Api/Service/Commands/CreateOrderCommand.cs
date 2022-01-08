@@ -12,6 +12,15 @@ namespace Order.Api.Data.Commands
     {
         public string ConsumerFullName { get; set; }
         public string ConsumerAddress { get; set; }
+        public CreateOrderCommand(string consumerFullName, string consumerAddress)
+        {
+            ConsumerFullName = consumerFullName;
+            ConsumerAddress = consumerAddress;
+        }
+        public CreateOrderCommand()
+        {
+
+        }
     }
 
     public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>

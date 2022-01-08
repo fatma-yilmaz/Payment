@@ -12,6 +12,11 @@ namespace Payment.Api.Data.Commands
     {
         public Guid PaymentId { get; set; }
         public string Status { get; set; }
+        public UpdatePaymentStatusCommand(Guid paymentId, String status)
+        {
+            PaymentId = paymentId;
+            Status = status;
+        }
     }
     public class UpdatePaymentStatusCommandValidator : AbstractValidator<UpdatePaymentStatusCommand>
     {
