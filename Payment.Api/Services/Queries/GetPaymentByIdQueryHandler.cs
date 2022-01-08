@@ -34,7 +34,7 @@ namespace Payment.Api.Data.Queries
 
             //get order details
             var order = new OrderDto { };
-            if(CustomValidators.IsValidGuid(payment.OrderId))
+            if (payment.OrderId != null && payment.OrderId != Guid.Empty)
             {
                 var getOrderResponse = await _orderHttpClient.GetOrder(payment.OrderId, cancellationToken);
                 order = _mapper.Map<OrderDto>(getOrderResponse);

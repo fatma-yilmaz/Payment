@@ -12,6 +12,6 @@ namespace Payment.Api.Entities
         public decimal Amount { get; set; }
         public string CurrencyCode { get; set; }
         public string Status { get; set; }
-        public Guid OrderId { get; set; }
+        public Guid? OrderId { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace Payment.Api.Data.HttpClients
         {
             _httpClient = httpClient;
         }
+        public OrderHttpClient(){}
 
         public virtual async Task<CreateOrderResponse> CreateOrder(string consumerFullName, string consumerAddress, CancellationToken cancellationToken)
         {
@@ -58,7 +59,7 @@ namespace Payment.Api.Data.HttpClients
             }
         }
 
-        public virtual async Task<GetOrderResponse> GetOrder(Guid orderId, CancellationToken cancellationToken)
+        public virtual async Task<GetOrderResponse> GetOrder(Guid? orderId, CancellationToken cancellationToken)
         {
             var result = new GetOrderResponse();
 
