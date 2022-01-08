@@ -18,6 +18,12 @@ namespace Order.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .ConfigureLogging(conf =>
+            {
+                conf.ClearProviders();
+                conf.AddDebug();
+                conf.AddConsole();
+            })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

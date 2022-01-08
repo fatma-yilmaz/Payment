@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Payment.Api.Data.HttpClients;
 using Payment.Api.DBContexts;
+using Payment.Api.Middlewares;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,7 @@ namespace Payment.Api
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
             services.AddAutoMapper(typeof(Startup));
+            services.AddLogging();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,7 +55,7 @@ namespace Payment.Api
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Payment API v1"));
             }
@@ -63,6 +65,8 @@ namespace Payment.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
