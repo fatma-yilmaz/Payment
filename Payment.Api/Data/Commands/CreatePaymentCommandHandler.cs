@@ -1,6 +1,6 @@
 ﻿using MediatR;
+using Payment.Api.Dal.Interfaces;
 using Payment.Api.Data.HttpClients;
-using Payment.Api.DBContexts;
 using Payment.Api.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,28 +12,25 @@ namespace Payment.Api.Data.Commands
 {
     public class CreatePaymentCommandHandler :IRequestHandler<CreatePaymentCommand,CreatePaymentCommandResponse>
     {
-        private readonly PaymentDbContext _dbContext;
+        private readonly IPaymentRepository _paymentRepo;
         private readonly OrderHttpClient _orderHttpClient;
         private readonly IMediator _mediator;
-        public CreatePaymentCommandHandler(PaymentDbContext dbContext, OrderHttpClient orderHttpClient, IMediator mediator)
+        public CreatePaymentCommandHandler(IPaymentRepository paymentRepo, OrderHttpClient orderHttpClient, IMediator mediator)
         {
-            _dbContext = dbContext;
+            _paymentRepo = paymentRepo;
             _orderHttpClient = orderHttpClient;
             _mediator = mediator;
         }
         public async Task<CreatePaymentCommandResponse> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
         {
             //create payment
-            var id = Guid.NewGuid();
-             _dbContext.Payments.Add(new PaymentEntity()
-            {
-                Id = id,
-                Amount = request.Amount,
-                CurrencyCode = request.CurrencyCode,
-                Status = "Created",
-                CreationDate = DateTime.Now
-            });
-            await _dbContext.SaveChangesAsync();
+            var id=await _paymentRepo.Create(new PaymentEntity()
+                                    {
+                                        Amount = request.Amount,
+                                        CurrencyCode = request.CurrencyCode,
+                                        Status = "Created",
+                                        CreationDate = DateTime.Now
+                                    });
 
             //create order
             var orderResponse = await _orderHttpClient.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken);

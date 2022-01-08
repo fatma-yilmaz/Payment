@@ -1,6 +1,5 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Payment.Api.DBContexts;
+using Payment.Api.Dal.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +10,15 @@ namespace Payment.Api.Data.Commands
 {
     public class UpdatePaymentOrderStatusCommandHandler: IRequestHandler<UpdatePaymentOrderStatusCommand, UpdatePaymentOrderStatusCommandResponse>
     {
-        private readonly PaymentDbContext _dbContext;
-        public UpdatePaymentOrderStatusCommandHandler(PaymentDbContext dbContext)
+        private readonly IPaymentRepository _paymentRepo;
+        public UpdatePaymentOrderStatusCommandHandler(IPaymentRepository paymentRepo)
         {
-            _dbContext = dbContext;
+            _paymentRepo = paymentRepo;
         }
 
         public async Task<UpdatePaymentOrderStatusCommandResponse> Handle(UpdatePaymentOrderStatusCommand request, CancellationToken cancellationToken)
         {
-            var payment = await _dbContext.Payments.SingleOrDefaultAsync(p => p.Id == request.PaymentId);
+            var payment = await _paymentRepo.GetById(request.PaymentId);
 
             if(payment ==null)
             {
@@ -33,9 +32,7 @@ namespace Payment.Api.Data.Commands
 
             payment.OrderId = request.OrderId;
             payment.Status = "Completed";
-            _dbContext.Payments.Update(payment);
-
-            await _dbContext.SaveChangesAsync();
+            await _paymentRepo.Update(payment);
 
             return new UpdatePaymentOrderStatusCommandResponse
             {

@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Payment.Api.Core.Validators;
+using Payment.Api.Dal.Interfaces;
 using Payment.Api.Data.HttpClients;
-using Payment.Api.DBContexts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +15,13 @@ namespace Payment.Api.Data.Queries
 
     public class GetPaymentByIdQueryHandler : IRequestHandler<GetPaymentByIdQuery, GetPaymentByIdQueryResponse>
     {
-        private readonly PaymentDbContext _dbContext;
+        private readonly IPaymentRepository _paymentRepo;
         private readonly OrderHttpClient _orderHttpClient;
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
-        public GetPaymentByIdQueryHandler(PaymentDbContext dbContext, OrderHttpClient orderHttpClient, IMediator mediator, IMapper mapper)
+        public GetPaymentByIdQueryHandler(IPaymentRepository paymentRepo, OrderHttpClient orderHttpClient, IMediator mediator, IMapper mapper)
         {
-            _dbContext = dbContext;
+            _paymentRepo = paymentRepo;
             _orderHttpClient = orderHttpClient;
             _mediator = mediator;
             _mapper = mapper;
@@ -29,7 +29,7 @@ namespace Payment.Api.Data.Queries
         public async Task<GetPaymentByIdQueryResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
         {
             //get payment details
-            var payment = await _dbContext.Payments.SingleOrDefaultAsync(p => p.Id == request.Id);
+            var payment = await _paymentRepo.GetById(request.Id);
             if (payment == null) return null;
 
             //get order details

@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Order.Api.Dal.Interfaces;
+using Order.Api.Dal.Repositories;
 using Order.Api.DBContexts;
 using Order.Api.Middlewares;
 using System;
@@ -40,6 +42,7 @@ namespace Order.Api
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddLogging();
+            services.AddScoped<IOrderRepository, OrderRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

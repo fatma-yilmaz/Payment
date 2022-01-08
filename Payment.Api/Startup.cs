@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Payment.Api.Dal.Interfaces;
+using Payment.Api.Dal.Repositories;
 using Payment.Api.Data.HttpClients;
 using Payment.Api.DBContexts;
 using Payment.Api.Middlewares;
@@ -48,6 +50,7 @@ namespace Payment.Api
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddLogging();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
