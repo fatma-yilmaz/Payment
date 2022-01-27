@@ -20,7 +20,7 @@ namespace Payment.Api.Data.Commands
 
         public async Task<UpdatePaymentStatusCommandResponse> Handle(UpdatePaymentStatusCommand request, CancellationToken cancellationToken)
         {
-            var payment = await _paymentRepo.GetById(request.PaymentId);
+            var payment = await _paymentRepo.GetById(request.PaymentId, cancellationToken);
 
             if (payment == null)
             {
@@ -33,7 +33,7 @@ namespace Payment.Api.Data.Commands
             }
 
             payment.Status = request.Status;
-            await _paymentRepo.Update(payment);
+            await _paymentRepo.Update(payment, cancellationToken);
 
             return new UpdatePaymentStatusCommandResponse
             {

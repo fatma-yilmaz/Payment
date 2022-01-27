@@ -5,6 +5,7 @@ using Payment.Api.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Payment.Api.Dal.Repositories
@@ -16,26 +17,23 @@ namespace Payment.Api.Dal.Repositories
         {
             _dbContext = dbContext;
         }
-        public Task<Guid> Create(PaymentEntity payment)
+        public async Task<Guid> Create(PaymentEntity payment, CancellationToken cancellationToken)
         {
-            var id = Guid.NewGuid();
-            payment.Id = id;
-            _dbContext.Payments.Add(payment);
-            _dbContext.SaveChangesAsync();
-            return Task.FromResult(id);
+            payment.Id = Guid.NewGuid();
+            await _dbContext.Payments.AddAsync(payment,cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return payment.Id;
         }
 
-        public Task<PaymentEntity> GetById(Guid id)
+        public async Task<PaymentEntity> GetById(Guid id, CancellationToken cancellationToken)
         {
-            return _dbContext.Payments.SingleOrDefaultAsync(p => p.Id == id);
+            return  await _dbContext.Payments.SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
-        public Task<bool> Update(PaymentEntity payment)
+        public async Task Update(PaymentEntity payment, CancellationToken cancellationToken)
         {
             _dbContext.Payments.Update(payment);
-            _dbContext.SaveChangesAsync();
-            return Task.FromResult(true);
-
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

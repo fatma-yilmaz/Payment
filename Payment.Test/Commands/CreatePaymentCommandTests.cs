@@ -47,7 +47,7 @@ namespace Payment.Test.Commands
             var orderHttpClientResponse = new CreateOrderResponse { isSuccess = true, orderId = Guid.NewGuid()};
 
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.Create(It.IsAny<PaymentEntity>())).ReturnsAsync(paymentId);
+            mock.Mock<IPaymentRepository>().Setup(x => x.Create(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(paymentId);
             mock.Mock<OrderHttpClient>().Setup(x => x.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken)).ReturnsAsync(orderHttpClientResponse);
             mock.Mock<IMediator>()
                     .Setup(x => x.Send(It.Is<UpdatePaymentOrderStatusCommand>(m => m.PaymentId == paymentId && m.OrderId == orderHttpClientResponse.orderId), cancellationToken))
@@ -61,7 +61,7 @@ namespace Payment.Test.Commands
             Assert.True(response.IsSuccess);
             Assert.Equal(response.PaymenId, paymentId);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.Create(It.IsAny<PaymentEntity>()), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.Create(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>()), Times.Once);
             mock.Mock<OrderHttpClient>().Verify(x => x.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken),Times.Once);
             mock.Mock<IMediator>().Verify(x => x.Send(It.Is<UpdatePaymentOrderStatusCommand>(m => m.PaymentId == paymentId && m.OrderId == orderHttpClientResponse.orderId), cancellationToken),Times.Once);
         }
@@ -84,7 +84,7 @@ namespace Payment.Test.Commands
             var orderHttpClientResponse = new CreateOrderResponse { isSuccess = true, orderId = Guid.NewGuid() };
 
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.Create(It.IsAny<PaymentEntity>())).ReturnsAsync(paymentId);
+            mock.Mock<IPaymentRepository>().Setup(x => x.Create(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(paymentId);
             mock.Mock<OrderHttpClient>().Setup(x => x.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken)).ReturnsAsync(orderHttpClientResponse);
             mock.Mock<IMediator>()
                     .Setup(x => x.Send(It.Is<UpdatePaymentOrderStatusCommand>(m => m.PaymentId == paymentId && m.OrderId == orderHttpClientResponse.orderId), cancellationToken))
@@ -97,7 +97,7 @@ namespace Payment.Test.Commands
             Assert.NotNull(response);
             Assert.False(response.IsSuccess);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.Create(It.IsAny<PaymentEntity>()), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.Create(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>()), Times.Once);
             mock.Mock<OrderHttpClient>().Verify(x => x.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken), Times.Once);
             mock.Mock<IMediator>().Verify(x => x.Send(It.Is<UpdatePaymentOrderStatusCommand>(m => m.PaymentId == paymentId && m.OrderId == orderHttpClientResponse.orderId), cancellationToken), Times.Once);
         }
@@ -119,7 +119,7 @@ namespace Payment.Test.Commands
             var orderHttpClientResponse = new CreateOrderResponse { isSuccess = false, orderId = Guid.Empty };
 
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.Create(It.IsAny<PaymentEntity>())).ReturnsAsync(paymentId);
+            mock.Mock<IPaymentRepository>().Setup(x => x.Create(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>())).ReturnsAsync(paymentId);
             mock.Mock<OrderHttpClient>().Setup(x => x.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken)).ReturnsAsync(orderHttpClientResponse);
             mock.Mock<IMediator>()
                     .Setup(x => x.Send(It.Is<UpdatePaymentStatusCommand>(m => m.PaymentId == paymentId && m.Status == "Failed"), cancellationToken))
@@ -132,7 +132,7 @@ namespace Payment.Test.Commands
             Assert.NotNull(response);
             Assert.False(response.IsSuccess);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.Create(It.IsAny<PaymentEntity>()), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.Create(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>()), Times.Once);
             mock.Mock<OrderHttpClient>().Verify(x => x.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken), Times.Once);
             mock.Mock<IMediator>().Verify(x => x.Send(It.Is<UpdatePaymentStatusCommand>(m => m.PaymentId == paymentId && m.Status == "Failed"), cancellationToken), Times.Once);
         }

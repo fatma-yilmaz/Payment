@@ -12,5 +12,8 @@
       "UpstreamPathTemplate": "/pay/{id}",
       "UpstreamHttpMethod": [ "Get" ]
     }
-  ]
+  ],
+  "GlobalConfiguration": {
+      "BaseUrl":  "https://localhost:5021"
+  }
 }

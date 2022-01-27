@@ -36,8 +36,8 @@ namespace Payment.Test.Commands
             var request = _fixture.Create<UpdatePaymentStatusCommand>();
             var paymentEntity = _fixture.Create<PaymentEntity>();
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.PaymentId)).ReturnsAsync(paymentEntity);
-            mock.Mock<IPaymentRepository>().Setup(x => x.Update(It.IsAny<PaymentEntity>())).ReturnsAsync(true);
+            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.PaymentId, cancellationToken)).ReturnsAsync(paymentEntity);
+            mock.Mock<IPaymentRepository>().Setup(x => x.Update(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(true));
 
             //Act
             var response = await handler.Handle(request, cancellationToken);
@@ -46,8 +46,8 @@ namespace Payment.Test.Commands
             Assert.NotNull(response);
             Assert.True(response.IsSuccess);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.PaymentId), Times.Once);
-            mock.Mock<IPaymentRepository>().Verify(x => x.Update(It.IsAny<PaymentEntity>()), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.PaymentId, cancellationToken), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.Update(It.IsAny<PaymentEntity>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Theory, AutoData]
@@ -59,7 +59,7 @@ namespace Payment.Test.Commands
             var request = _fixture.Create<UpdatePaymentStatusCommand>();
             var paymentEntity = (PaymentEntity)null;
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.PaymentId)).ReturnsAsync(paymentEntity);
+            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.PaymentId,cancellationToken)).ReturnsAsync(paymentEntity);
 
             //Act
             var response = await handler.Handle(request, cancellationToken);
@@ -69,7 +69,7 @@ namespace Payment.Test.Commands
             Assert.False(response.IsSuccess);
             Assert.Equal(response.Message, "payment not found".ToString());
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.PaymentId), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.PaymentId,cancellationToken), Times.Once);
         }
     }
 }

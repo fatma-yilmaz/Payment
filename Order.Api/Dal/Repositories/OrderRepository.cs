@@ -16,18 +16,18 @@ namespace Order.Api.Dal.Repositories
         {
             _dbContext = dbContext;
         }
-        public Task<Guid> Create(OrderEntity order)
+        public async Task<Guid> Create(OrderEntity order)
         {
             var id = Guid.NewGuid();
             order.Id = id;
-            _dbContext.Orders.Add(order);
-            _dbContext.SaveChangesAsync();
-            return Task.FromResult(id);
+            await _dbContext.Orders.AddAsync(order);
+            await _dbContext.SaveChangesAsync();
+            return id;
         }
 
-        public Task<OrderEntity> GetById(Guid id)
+        public async Task<OrderEntity> GetById(Guid id)
         {
-            return _dbContext.Orders.SingleOrDefaultAsync(p => p.Id == id);
+            return await _dbContext.Orders.SingleOrDefaultAsync(p => p.Id == id);
         }
     }
 }

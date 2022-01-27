@@ -30,7 +30,7 @@ namespace Payment.Api.Data.Commands
                                         CurrencyCode = request.CurrencyCode,
                                         Status = "Created",
                                         CreationDate = DateTime.Now
-                                    });
+                                    }, cancellationToken);
 
             //create order
             var orderResponse = await _orderHttpClient.CreateOrder(request.Order.ConsumerFullName, request.Order.ConsumerAddress, cancellationToken);

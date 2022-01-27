@@ -29,7 +29,7 @@ namespace Payment.Api.Data.Queries
         public async Task<GetPaymentByIdQueryResponse> Handle(GetPaymentByIdQuery request, CancellationToken cancellationToken)
         {
             //get payment details
-            var payment = await _paymentRepo.GetById(request.Id);
+            var payment = await _paymentRepo.GetById(request.Id, cancellationToken);
             if (payment == null) return null;
 
             //get order details

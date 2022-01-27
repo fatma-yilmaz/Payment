@@ -44,7 +44,7 @@ namespace Payment.Test.Queries
             queryResponse.Order = orderDto;
             paymentEntity.Id = request.Id;
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id)).ReturnsAsync(paymentEntity);
+            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id,cancellationToken)).ReturnsAsync(paymentEntity);
             mock.Mock<OrderHttpClient>().Setup(x => x.GetOrder(paymentEntity.OrderId,cancellationToken)).ReturnsAsync(orderHttpClientResponse);
             mock.Mock<IMapper>().Setup(x => x.Map<OrderDto>(It.IsAny<GetOrderResponse>())).Returns(orderDto);
             mock.Mock<IMapper>().Setup(x => x.Map<GetPaymentByIdQueryResponse>(It.IsAny<PaymentEntity>())).Returns(queryResponse);
@@ -56,7 +56,7 @@ namespace Payment.Test.Queries
             Assert.NotNull(response);
             Assert.Equal(response.Order, orderDto);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id),Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id,cancellationToken),Times.Once);
             mock.Mock<OrderHttpClient>().Verify(x => x.GetOrder(paymentEntity.OrderId, cancellationToken), Times.Once);
             mock.Mock<IMapper>().Verify(x => x.Map<OrderDto>(It.IsAny<GetOrderResponse>()),Times.Once);
             mock.Mock<IMapper>().Verify(x => x.Map<GetPaymentByIdQueryResponse>(It.IsAny<PaymentEntity>()), Times.Once);
@@ -71,7 +71,7 @@ namespace Payment.Test.Queries
             var request = _fixture.Create<GetPaymentByIdQuery>();
             var paymentEntity = (PaymentEntity)(null);
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id)).ReturnsAsync(paymentEntity);
+            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id,cancellationToken)).ReturnsAsync(paymentEntity);
 
             //Act
             var response = await handler.Handle(request, cancellationToken);
@@ -79,7 +79,7 @@ namespace Payment.Test.Queries
             //Asset
             Assert.Null(response);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id,cancellationToken), Times.Once);
         }
 
         [Theory, AutoData]
@@ -94,7 +94,7 @@ namespace Payment.Test.Queries
             var paymentEntity = _fixture.Create<PaymentEntity>();
             paymentEntity.OrderId = null;
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id)).ReturnsAsync(paymentEntity);
+            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id,cancellationToken)).ReturnsAsync(paymentEntity);
             mock.Mock<IMapper>().Setup(x => x.Map<GetPaymentByIdQueryResponse>(It.IsAny<PaymentEntity>())).Returns(queryResponse);
 
             //Act
@@ -106,7 +106,7 @@ namespace Payment.Test.Queries
             Assert.Equal(response.Order.ConsumerFullName, order.ConsumerFullName);
             Assert.Equal(response.Order.ConsumerAddress, order.ConsumerAddress);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id,cancellationToken), Times.Once);
             mock.Mock<IMapper>().Verify(x => x.Map<GetPaymentByIdQueryResponse>(It.IsAny<PaymentEntity>()), Times.Once);
         }
 
@@ -122,7 +122,7 @@ namespace Payment.Test.Queries
             var paymentEntity = _fixture.Create<PaymentEntity>();
             paymentEntity.OrderId = Guid.Empty;
 
-            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id)).ReturnsAsync(paymentEntity);
+            mock.Mock<IPaymentRepository>().Setup(x => x.GetById(request.Id,cancellationToken)).ReturnsAsync(paymentEntity);
             mock.Mock<IMapper>().Setup(x => x.Map<GetPaymentByIdQueryResponse>(It.IsAny<PaymentEntity>())).Returns(queryResponse);
 
             //Act
@@ -134,7 +134,7 @@ namespace Payment.Test.Queries
             Assert.Equal(response.Order.ConsumerFullName, order.ConsumerFullName);
             Assert.Equal(response.Order.ConsumerAddress, order.ConsumerAddress);
 
-            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id), Times.Once);
+            mock.Mock<IPaymentRepository>().Verify(x => x.GetById(request.Id,cancellationToken), Times.Once);
             mock.Mock<IMapper>().Verify(x => x.Map<GetPaymentByIdQueryResponse>(It.IsAny<PaymentEntity>()), Times.Once);
         }
     }
