@@ -1,10 +1,8 @@
 ﻿using AutoMapper;
-using Payment.Api.Data.Queries;
+using Payment.Api.Core.Enums;
 using Payment.Api.Entities;
+using Payment.Api.Services.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Payment.Api.Core.Mappers
 {
@@ -12,7 +10,9 @@ namespace Payment.Api.Core.Mappers
     {
         public PaymentProfile()
         {
-            CreateMap<PaymentEntity, GetPaymentByIdQueryResponse>();
+            CreateMap<PaymentEntity, GetPaymentByIdServiceResponse>()
+                .ForMember(destination => destination.Status,
+                 opt => opt.MapFrom(source => Enum.GetName(typeof(PaymentStatus), source.Status)));
         }
     }
 }

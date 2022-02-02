@@ -11,8 +11,8 @@ namespace Payment.Api.DBContexts
     {
         public PaymentDbContext(DbContextOptions options): base(options)
         {
-
         }
         public DbSet<PaymentEntity> Payments { get; set; }
+        public DbSet<OrderEntity> Orders { get; set; }
     }
 }

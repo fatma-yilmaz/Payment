@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Payment.Api.Dal.Interfaces
+namespace Payment.Api.Dal.IRepositories
 {
     public interface IPaymentRepository
     {

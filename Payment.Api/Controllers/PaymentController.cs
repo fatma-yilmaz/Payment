@@ -1,11 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Payment.Api.Data.Commands;
-using Payment.Api.Data.Queries;
+using Payment.Api.Services;
+using Payment.Api.Services.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Payment.Api.Controllers
@@ -14,27 +11,24 @@ namespace Payment.Api.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private readonly IMediator _mediator;
+        private readonly IPaymentService _paymentService;
 
-        public PaymentController(IMediator mediator) 
+        public PaymentController(IPaymentService paymentService) 
         {
-            _mediator = mediator;
+            _paymentService = paymentService;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            var query = new GetPaymentByIdQuery(id);
-            var response = (await _mediator.Send(query));
-            if (response == null) return NotFound();
-
+            var response = await _paymentService.GetById(new GetPaymentByIdServiceRequest { Id = id}, new System.Threading.CancellationToken());
             return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreatePaymentCommand requestModel)
+        public async Task<IActionResult> Post([FromBody] CreatePaymentServiceRequest createPaymentRequest)
         {
-            var response = await _mediator.Send(requestModel);
+            var response = await _paymentService.Create(createPaymentRequest,new System.Threading.CancellationToken());
             return Ok(response);
         }
 

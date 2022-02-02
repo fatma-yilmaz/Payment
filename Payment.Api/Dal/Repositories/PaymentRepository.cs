@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Payment.Api.Dal.Interfaces;
+using Payment.Api.Dal.IRepositories;
 using Payment.Api.DBContexts;
 using Payment.Api.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,7 +19,6 @@ namespace Payment.Api.Dal.Repositories
         {
             payment.Id = Guid.NewGuid();
             await _dbContext.Payments.AddAsync(payment,cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
             return payment.Id;
         }
 

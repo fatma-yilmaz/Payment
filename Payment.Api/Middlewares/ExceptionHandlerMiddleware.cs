@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Payment.Api.Core.Exceptions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Payment.Api.Middlewares
@@ -24,11 +25,42 @@ namespace Payment.Api.Middlewares
             {
                 await _next.Invoke(httpContext);
             }
-            catch (Exception ex)
+            catch (PaymentException exception)
             {
-                //exception handling
-                _logger.LogError(ex.Message);
+                _logger.LogError(exception.Message);
+                var response = httpContext.Response;
+                response.ContentType = "application/json";
+                var responseModel = new ErrorDetails{Message = exception.Message,};
+                response.StatusCode = (int)exception.StatusCode;
+
+                var result = JsonSerializer.Serialize(responseModel);
+                await response.WriteAsync(result);
             }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception.Message);
+                await HandleExceptionAsync(httpContext, exception);
+            }
+        }
+
+
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            await context.Response.WriteAsync(new ErrorDetails()
+            {
+                Message = $"Something went wrong! {exception.Message}"
+            }.ToString());
+        }
+    }
+
+    public class ErrorDetails
+    {
+        public string Message { get; set; }
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
         }
     }
 }

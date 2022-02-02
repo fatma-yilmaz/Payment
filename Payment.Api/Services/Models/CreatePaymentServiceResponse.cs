@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Payment.Api.Data.Commands
+namespace Payment.Api.Services.Models
 {
-    public class CreatePaymentCommandResponse
+    public class CreatePaymentServiceResponse
     {
-        public bool IsSuccess { get; set; }
         public Guid PaymenId { get; set; }
     }
 }

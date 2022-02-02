@@ -10,15 +10,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Payment.Api.Dal.Interfaces;
+using Payment.Api.Dal.Configuration;
+using Payment.Api.Dal.IRepositories;
 using Payment.Api.Dal.Repositories;
-using Payment.Api.Data.HttpClients;
 using Payment.Api.DBContexts;
 using Payment.Api.Middlewares;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Payment.Api.Services;
+using Payment.Api.Services.Validators;
 
 namespace Payment.Api
 {
@@ -36,21 +34,18 @@ namespace Payment.Api
         {
             services.AddDbContext<PaymentDbContext>(option => option.UseInMemoryDatabase(Configuration.GetConnectionString("PaymentDb")));
             services.AddMediatR(typeof(Startup));
-            services.AddControllers().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>());
+            services.AddControllers().AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<CreatePaymentServiceRequestValidator>());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Payment API", Version = "v1" });
             });
 
-            services.AddHttpClient<OrderHttpClient>(client =>
-            {
-                client.BaseAddress = new Uri("https://localhost:44356/");
-                client.Timeout = TimeSpan.FromSeconds(1000);
-                client.DefaultRequestHeaders.Add("Accept", "application/json");
-            });
             services.AddAutoMapper(typeof(Startup));
             services.AddLogging();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
